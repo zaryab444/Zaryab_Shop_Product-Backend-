@@ -1,0 +1,12 @@
+we use bcrypt js 
+
+npm i bcrypt
+
+we use nodemon
+
+we use npm express-async-handler
+npm run server
+
+
+for import data in mongodb cloud command
+npm run data:import

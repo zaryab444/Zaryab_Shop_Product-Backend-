@@ -1,0 +1,33 @@
+{
+  "name": "shop-project-backend",
+  "version": "1.0.0",
+  "description": "Shop project backend",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon",
+    "data:import": "node seeder",
+    "data:destroy": "node seeder -d"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bluebitsz-admin@bitbucket.org/bluebitsz-admin/shop-project-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://bitbucket.org/bluebitsz-admin/shop-project-backend/issues"
+  },
+  "homepage": "https://bitbucket.org/bluebitsz-admin/shop-project-backend#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "mongoose": "^7.0.1"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "nodemon": "^2.0.21"
+  }
+}
