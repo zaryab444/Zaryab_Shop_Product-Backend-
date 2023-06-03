@@ -4,6 +4,8 @@ const connectDB = require("./config/db");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 const productRoutes = require("./routes/productRoutes");
+const userRoutes = require("./routes/userRoutes");
+
 dotenv.config();
 
 connectDB();
@@ -16,6 +18,9 @@ app.get("/", (req, res) => {
 
 // Product Api routes
 app.use("/api/products", productRoutes);
+
+// // User Api routes
+ app.use("/api/users", userRoutes);
 
 // Middle wares for global error handling in api
 app.use(notFound);
