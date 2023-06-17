@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
@@ -15,6 +16,9 @@ const app = express();
 //body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
+//Cookie parser middleware
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.send("API OS RUNNING...");

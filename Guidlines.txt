@@ -10,3 +10,7 @@ npm run server
 
 for import data in mongodb cloud command
 npm run data:import
+
+for jwt install package
+npm i jsonwebtoken
+npm i cookie-parser
