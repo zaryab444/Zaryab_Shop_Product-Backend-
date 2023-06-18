@@ -6,6 +6,7 @@ const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 dotenv.config();
 
@@ -30,6 +31,9 @@ app.use("/api/products", productRoutes);
 // // User Api routes
  app.use("/api/users", userRoutes);
 
+ // Order Api routes
+ app.use("/api/orders", orderRoutes);
+ 
 // Middle wares for global error handling in api
 app.use(notFound);
 app.use(errorHandler);

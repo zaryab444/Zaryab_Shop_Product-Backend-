@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../data/models/userModel");
 const generateToken = require("../utils/generateToken");
+const jwt = require('jsonwebtoken');
 
 //@desc Login user
 //route POST /api/users/login
@@ -10,15 +11,27 @@ const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (user && (await user.matchPassword(password))) {
-    generateToken(res, user._id);
-    res.status(200).json({
-      // _id: user._id,
-      // name: user.name,
-      // email: user.email,
-      // isAdmin: user.isAdmin,
-      message: "User Login Successfully",
-      isAdmin: user.isAdmin,
-    });
+    const token = jwt.sign(
+      {
+          userId: user.id,
+          //admin user can only use the token to process operation not user
+          isAdmin: user.isAdmin
+      },
+      process.env.
+      JWT_SECRET,
+      {expiresIn : '1d'}
+  ) 
+  res.status(200).send({user: user.email , token: token}) 
+    // generateToken(res, user._id);
+    // res.status(200).json({
+    //   // _id: user._id,
+    //   // name: user.name,
+    //   // email: user.email,
+    //   // isAdmin: user.isAdmin,
+    //   message: "User Login Successfully",
+    //   isAdmin: user.isAdmin,
+    //   token: res.token
+    // });
   } else {
     res.status(401);
     throw new Error("Invalid email or password");
@@ -115,7 +128,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     const updateUser = await user.save();
     res.status(200).json({
       _id: updateUser._id,
-      name: updateUsera.name,
+      name: updateUser.name,
       email: updateUser.email,
       isAdmin: updateUser.isAdmin
     });
