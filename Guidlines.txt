@@ -14,3 +14,31 @@ npm run data:import
 for jwt install package
 npm i jsonwebtoken
 npm i cookie-parser
+
+
+
+
+{
+    "_id": "646a06f0f62104b7920f3f4c",
+    "orderItems": [
+        {
+            "name": "smart watch",
+            "qty": 3,
+            "image": "orderimage",
+            "price": 4
+        }
+    ],
+    "shippingAddress": [
+        {
+            "address": "Downtown street 1",
+            "city": "Brooklyn",
+            "postalCode": "123Houston",
+            "country": "United State"
+        }
+    ],
+    "paymentMethod": "Manual",
+    "taxPrice": 12.99,
+    "shippingPrice": 14.55,
+    "totalPrice": 25.00,
+    "isDelivered": false
+}

@@ -33,6 +33,10 @@ app.use("/api/products", productRoutes);
 
  // Order Api routes
  app.use("/api/orders", orderRoutes);
+
+ app.get('/api/config/paypal', (req,res) =>
+   res.send({clientId: process.env.PAYPAL_CLIENT_ID})
+ );
  
 // Middle wares for global error handling in api
 app.use(notFound);
