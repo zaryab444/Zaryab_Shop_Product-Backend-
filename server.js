@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
@@ -7,6 +8,7 @@ const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+
 
 dotenv.config();
 
@@ -37,7 +39,8 @@ app.use("/api/products", productRoutes);
  app.get('/api/config/paypal', (req,res) =>
    res.send({clientId: process.env.PAYPAL_CLIENT_ID})
  );
- 
+
+ app.use("/public/uploads", express.static(__dirname + "/public/uploads"));
 // Middle wares for global error handling in api
 app.use(notFound);
 app.use(errorHandler);
