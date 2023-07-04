@@ -1,32 +1,29 @@
 const asyncHandler = require("express-async-handler");
 const Product = require("../data/models/productModel.js");
-const multer = require('multer');
-const FILE_TYPE_MAP ={
-  'image/png':'png',
-  'image/jpeg':'jpeg',
-  'image/jpg':'jpg'
-}
+const multer = require("multer");
+const FILE_TYPE_MAP = {
+  "image/png": "png",
+  "image/jpeg": "jpeg",
+  "image/jpg": "jpg",
+};
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const isValid = FILE_TYPE_MAP[file.mimetype];
-    let uploadError = new Error('Invalid image type');
+    let uploadError = new Error("Invalid image type");
     if (isValid) {
       uploadError = null;
     }
-    cb(uploadError, 'public/uploads');
+    cb(uploadError, "public/uploads");
   },
   filename: function (req, file, cb) {
-    const fileName = file.originalname.split(' ').join('-');
+    const fileName = file.originalname.split(" ").join("-");
     const extension = FILE_TYPE_MAP[file.mimetype];
     cb(null, `${fileName}-${Date.now()}.${extension}`);
-  }
+  },
 });
 
-const uploadOptions = multer({ storage: storage }).single('image');
-
-
-
+const uploadOptions = multer({ storage: storage }).single("image");
 
 // @desc     Fetch all products
 // @route    GET /api/products
@@ -55,11 +52,11 @@ const createProduct = asyncHandler(async (req, res) => {
     // File upload is successful, continue with creating the product
     const file = req.file;
     if (!file) {
-      return res.status(400).send('No image in the request');
+      return res.status(400).send("No image in the request");
     }
 
     const fileName = req.file.filename;
-    const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`;
+    const basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
 
     let product = new Product({
       name: req.body.name,
@@ -83,7 +80,7 @@ const createProduct = asyncHandler(async (req, res) => {
 // http://localhost:5000/api/products
 
 // const createProduct = asyncHandler(async (req, res) => {
- 
+
 //   const product = new Product({
 //     name: "zaryab product",
 //     price: 8,
@@ -99,7 +96,7 @@ const createProduct = asyncHandler(async (req, res) => {
 //   res.status(200).json(createProduct);
 // });
 // const createProduct = asyncHandler(async (req, res) => {
-  
+
 //   const file = req.file;
 //     if(!file) return res.status(400).send('No Image in the request');
 
@@ -116,7 +113,7 @@ const createProduct = asyncHandler(async (req, res) => {
 //       numReviews: req.body.numReviews,
 //       description: req.body.description,
 //     });
-    
+
 //     product = await product.save();
 //     res.status(200).json(product);
 // });
@@ -162,7 +159,6 @@ const updateProduct = asyncHandler(async (req, res) => {
   }
 });
 
-
 // @desc    Delete a product
 // @route   DELETE /api/products/:id
 // @access  Private/Admin
@@ -171,10 +167,44 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
   if (product) {
     await Product.deleteOne({ _id: product._id });
-    res.json({ message: 'Product removed' });
+    res.json({ message: "Product removed" });
   } else {
     res.status(404);
-    throw new Error('Product not found');
+    throw new Error("Product not found");
+  }
+});
+
+// @desc   Create a new review
+// @route   POST /api/products/:id/reviews
+// @access  Private
+const createProductReview = asyncHandler(async (req, res) => {
+  const { rating, comment } = req.body;
+  const product = await Product.findById(req.params.id);
+
+  if (product) {
+   const alreadyReviewed = product.reviews.find(
+    (review) => review.user.toString() === req.user.id.toString()
+   );
+
+   if(alreadyReviewed){
+    res.status(400);
+    throw new Error('Product already reviewed');
+   }
+   const review = {
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+    user: req.user._id
+   };
+   product.reviews.push(review);
+   product.numReviews = product.reviews.length;
+
+   product.rating = product.reviews.reduce((acc, review) => acc + review.rating, 0) / product.reviews.length;
+   await product.save();
+   res.status(200).json({message: 'Review added'});
+  } else {
+    res.status(404);
+    throw new Error("Resource not found");
   }
 });
 
@@ -183,5 +213,6 @@ module.exports = {
   getProductById,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  createProductReview
 };
