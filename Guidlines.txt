@@ -15,6 +15,9 @@ for jwt install package
 npm i jsonwebtoken
 npm i cookie-parser
 
+paypal setup
+zaryabdeveloper49@gmail.com
+26JgyL57
 
 
 {
